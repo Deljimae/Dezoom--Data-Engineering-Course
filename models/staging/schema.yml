@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: staging
+    database: AwsDataCatalog # Data source in athena
+    schema: kestradb # Database in Athena
+
+    tables:
+      - name: green_tripdata_iceberg
+      - name: yellow_tripdata_iceberg
+      - name: fhv_tripdata_iceberg
