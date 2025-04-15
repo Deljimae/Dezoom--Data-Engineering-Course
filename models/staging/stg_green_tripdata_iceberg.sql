@@ -29,7 +29,7 @@ select
     cast(trip_distance as Double) as trip_distance,
     {{ dbt.safe_cast("trip_type", api.Column.translate_type("integer")) }} as trip_type,
 
-    -- payment info
+        -- payment info
     cast(fare_amount as Double) as fare_amount,
     cast(extra as Double) as extra,
     cast(mta_tax as Double) as mta_tax,
@@ -37,8 +37,12 @@ select
     cast(tolls_amount as Double) as tolls_amount,
     cast(improvement_surcharge as Double) as improvement_surcharge,
     cast(total_amount as Double) as total_amount,
-    coalesce({{ dbt.safe_cast("payment_type", api.Column.translate_type("integer")) }},0) as payment_type,
+    case
+    when try_cast(payment_type as integer) in (1, 2, 3, 4, 5, 6) then cast(payment_type as integer)
+    else 0
+    end as payment_type,
     {{ get_payment_type_description("payment_type") }} as payment_type_description
+
 from tripdata
 where rn = 1
 
